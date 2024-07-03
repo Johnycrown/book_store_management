@@ -9,7 +9,7 @@ import java.util.List;
 public interface AuthorService {
 
 
-    public List<Author> getAllAuthors();
+    public List<Author> getAllAuthors(int pageNumber, int pageSize);
     public Author getAuthorById(Long id) throws ResourcesNotFoundException;
     public Author createAuthor(AuthorRequestDto author);
     public Author updateAuthor(Long id, AuthorRequestDto authorDetails) throws ResourcesNotFoundException, IllegalAccessException;

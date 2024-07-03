@@ -7,6 +7,9 @@ import com.book.management.exception.ResourcesNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,8 +23,10 @@ public class AuthorServiceImpl implements AuthorService{
     private final AuthorRepository authorRepository;
     private final ModelMapper modelMapper;
     @Override
-    public List<Author> getAllAuthors() {
-        return authorRepository.findAll();
+    public List<Author> getAllAuthors(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("id"));
+
+        return authorRepository.findAll(pageable).stream().toList();
     }
     @Override
     public Author getAuthorById(Long id) throws ResourcesNotFoundException {
