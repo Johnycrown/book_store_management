@@ -3,6 +3,8 @@ package com.book.management.book.domain;
 import com.book.management.author.domain.Author;
 import com.book.management.genre.domain.Genre;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -17,9 +19,12 @@ public class Book {
     private Long id;
     private String title;
     private Date publishYear;
+    @Min(1)
     private int pageCount;
     private String description;
     private String imageUrl;
+    @Min(0)
+    @Max(5)
     private int rating;
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
