@@ -40,19 +40,22 @@ public class BookServiceImpl implements BookService {
 
             log.info("create book request : {}", bookRequestDto);
             Author author = new Author();
-            if (bookRequestDto.getAuthor().getId() > 0) {
+            if (bookRequestDto.getAuthor().getId()!=null && bookRequestDto.getAuthor().getId()>0 ) {
                 author = authorRepository.findById(bookRequestDto.getAuthor().getId()).orElseThrow(() -> new ResourcesNotFoundException("Author with the id " + bookRequestDto.getAuthor().getId() + "  not found"));
             }
-            author = bookRequestDto.getAuthor();
+            else author = authorRepository.save(bookRequestDto.getAuthor());
 
             Genre genre = new Genre();
-            if (bookRequestDto.getGenre().getId() > 0) {
+            if (bookRequestDto.getGenre().getId() !=null && bookRequestDto.getGenre().getId() > 0) {
                 genre = genreRepository.findById(bookRequestDto.getGenre().getId())
                         .orElseThrow(() -> new ResourcesNotFoundException("Genre not found"));
 
             }
 
+            else genre = genreRepository.save(bookRequestDto.getGenre());
             book = modelMapper.map(bookRequestDto, Book.class);
+
+
             book.setAuthor(author);
             book.setGenre(genre);
             Book savedBook = bookRepository.save(book);

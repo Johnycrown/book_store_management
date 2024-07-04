@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.Date;
@@ -28,11 +29,11 @@ public class Book {
     private int rating;
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
-    @NotBlank(message = "Author cannot be null ")
+    @NotNull(message = "Author cannot be null ")
     private Author author;
     @ManyToOne
     @JoinColumn(name = "genre_id", nullable = false)
-    @NotBlank(message = "Genre cannot be null ")
+    @NotNull(message = "Genre cannot be null ")
     private Genre genre;
 
 

@@ -3,6 +3,7 @@ package com.book.management.author.domain;
 import com.book.management.book.domain.Book;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+//import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
