@@ -80,16 +80,39 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public Book updateBook(Long bookId, BookRequestDto bookRequestDto) throws IllegalAccessException, ResourcesNotFoundException {
-        log.info("update book request {}", bookRequestDto);
-        if (bookId <= 0) {
-            throw new IllegalAccessException("the id provided is invalid");
+        log.info("Update book request: {} for book ID: {}", bookRequestDto, bookId);
+
+        if (bookId == null || bookId <= 0) {
+            throw new IllegalAccessException("The ID provided is invalid: " + bookId);
         }
-        Book book = bookRepository.findById(bookId).orElseThrow(() -> new ResourcesNotFoundException("No record found with the book id provided"));
-        modelMapper.map(bookRequestDto, book);
-        Book updatedBook = bookRepository.save(book);
-        log.info("book updated successfully {}", updatedBook);
-        return updatedBook;
+
+        Book existingBook = bookRepository.findById(bookId)
+                .orElseThrow(() -> new ResourcesNotFoundException("No record found with the book ID provided: " + bookId));
+
+        try {
+            modelMapper.map(bookRequestDto, existingBook);
+
+            if (bookRequestDto.getAuthor().getId() != null) {
+                Author author = authorRepository.findById(bookRequestDto.getAuthor().getId())
+                        .orElseThrow(() -> new ResourcesNotFoundException("Author with ID " + bookRequestDto.getAuthor().getId() + " not found"));
+                existingBook.setAuthor(author);
+            }
+
+            if (bookRequestDto.getGenre().getId() != null) {
+                Genre genre = genreRepository.findById(bookRequestDto.getGenre().getId())
+                        .orElseThrow(() -> new ResourcesNotFoundException("Genre with ID " + bookRequestDto.getGenre().getId() + " not found"));
+                existingBook.setGenre(genre);
+            }
+
+            Book updatedBook = bookRepository.save(existingBook);
+            log.info("Book updated successfully: {}", updatedBook);
+            return updatedBook;
+        } catch (Exception e) {
+            log.error("Exception caught while updating book entity: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to update book", e);
+        }
     }
 
     @Override
