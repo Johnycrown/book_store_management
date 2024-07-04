@@ -15,5 +15,5 @@ public class BookRequestDto {
     private String description;
     private String imageUrl;
     private int rating;
-    private Set<Genre>  genre;
+    private Genre  genre;
 }

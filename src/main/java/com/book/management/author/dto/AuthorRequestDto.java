@@ -17,5 +17,5 @@ public class AuthorRequestDto {
     private Long id;
     private String name;
     private List<String> awards;
-    private Set<Book> books;
+    private Book book;
 }

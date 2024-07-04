@@ -8,7 +8,7 @@ import java.util.Locale;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-    List<Book>  findByAuthor(Long authorId);
+    List<Book>  findByAuthorId(Long authorId);
     List<Book>  findByTitle(String bookName);
 
 }

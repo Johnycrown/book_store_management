@@ -6,6 +6,8 @@ import com.book.management.book.domain.Book;
 import com.book.management.book.dto.BookRequestDto;
 import com.book.management.book.repository.BookRepository;
 import com.book.management.exception.ResourcesNotFoundException;
+import com.book.management.genre.domain.Genre;
+import com.book.management.genre.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -15,7 +17,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +28,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final ModelMapper modelMapper;
+    private final GenreRepository genreRepository;
 
 
     @Override
@@ -37,12 +42,19 @@ public class BookServiceImpl implements BookService {
             Author author = new Author();
             if (bookRequestDto.getAuthor().getId() > 0) {
                 author = authorRepository.findById(bookRequestDto.getAuthor().getId()).orElseThrow(() -> new ResourcesNotFoundException("Author with the id " + bookRequestDto.getAuthor().getId() + "  not found"));
-
             }
             author = bookRequestDto.getAuthor();
 
+            Genre genre = new Genre();
+            if (bookRequestDto.getGenre().getId() > 0) {
+                genre = genreRepository.findById(bookRequestDto.getGenre().getId())
+                        .orElseThrow(() -> new ResourcesNotFoundException("Genre not found"));
+
+            }
+
             book = modelMapper.map(bookRequestDto, Book.class);
             book.setAuthor(author);
+            book.setGenre(genre);
             Book savedBook = bookRepository.save(book);
             log.info("book record saved succesfully {}", savedBook);
             book = savedBook;
@@ -61,7 +73,7 @@ public class BookServiceImpl implements BookService {
         }
 
 
-        return bookRepository.findByAuthor(id);
+        return bookRepository.findByAuthorId(id);
     }
 
     @Override

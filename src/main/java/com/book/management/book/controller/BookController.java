@@ -15,7 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/book")
 @RequiredArgsConstructor
-
 public class BookController {
 
     private final BookService bookService;
